@@ -12,16 +12,6 @@ export default function SignUpPage() {
         }}>
         Text2Card
         </Typography>
-        <Button color="inherit">
-          <Link href = "/sign-in" passHref>
-            Login
-          </Link>
-        </Button>
-        <Button color="inherit">
-          <Link href = "/sign-up" passHref>
-            Sign Up
-          </Link>
-        </Button>
       </Toolbar>
     </AppBar>
 
