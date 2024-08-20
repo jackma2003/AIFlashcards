@@ -120,7 +120,7 @@ export default function Flashcards() {
           </Grid>
           {flashcards.length === 0 ? (
             <Typography variant="body1">
-              You don't have any flashcards yet. Create your first one!
+              You don&apos;t have any flashcards yet. Create your first one!
             </Typography>
           ) : (
             <Grid container spacing={3}>
