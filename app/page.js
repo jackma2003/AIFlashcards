@@ -150,12 +150,14 @@ const FAQSection = () => {
 };
 
 export default function Home() {
-  const handleSubmit = async () => {
+  const handleSubmit = async (planType) => {
     const checkoutSession = await fetch("/api/checkout_session", {
       method: "POST",
       headers: {
+        "Content-Type": "application/json",
         origin: "https://text2card-mu-inky.vercel.app/",
-      }
+      },
+      body: JSON.stringify({planType})
     }) 
     
     const checkoutSessionJson = await checkoutSession.json()
@@ -252,7 +254,7 @@ export default function Home() {
                     Access to basic flashcard features and limited storage.
                   </Typography>
                 </div>
-                <Button variant="outlined" color="primary" size="large" sx={{ mt: 2 }} onClick={handleSubmit}>
+                <Button variant="outlined" color="primary" size="large" sx={{ mt: 2 }} onClick={() => handleSubmit("basic")}>
                   Choose Basic
                 </Button>
               </Card>
@@ -280,7 +282,7 @@ export default function Home() {
                     Unlimited flashcards and storage, with priority support.
                   </Typography>
                 </div>
-                <Button variant="contained" color="primary" size="large" sx={{ mt: 2 }} onClick={handleSubmit}>
+                <Button variant="contained" color="primary" size="large" sx={{ mt: 2 }} onClick={() => handleSubmit("pro")}>
                   Choose Pro
                 </Button>
               </Card>

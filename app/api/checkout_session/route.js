@@ -21,6 +21,21 @@ export async function GET(req, {params}) {
 }
 
 export async function POST(req) {
+    const {planType} = await req.json()
+
+    const planDetails = {
+        basic: {
+            name: "Basic Subscription",
+            price: 5,
+        },
+        pro: {
+            name: "Pro Subscription",
+            price: 10,
+        }
+    }
+
+    const selectedPlan = planDetails[planType] || planDetails.basic
+
     const params = {
         mode: "subscription",
         payment_method_types: ["card"],
@@ -29,9 +44,9 @@ export async function POST(req) {
                 price_data: {
                     currency: "usd",
                     product_data: {
-                        name: "Pro Subscription",
+                        name: selectedPlan.name,
                     },
-                    unit_amount: formatAmountForStripe(10),
+                    unit_amount: formatAmountForStripe(selectedPlan.price),
                     recurring:{
                         interval: "month",
                         interval_count: 1,
@@ -41,7 +56,7 @@ export async function POST(req) {
             },
         ],
         success_url: `${req.headers.get("origin")}/result?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${req.headers.get("origin")}/result?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${req.headers.get("origin")}/`,
     }
     const checkoutSession = await stripe.checkout.sessions.create(params)
 

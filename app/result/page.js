@@ -2,7 +2,10 @@
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import getStripe from "@/utils/get-stripe"
-import { CircularProgress, Typography, Container, Box } from "@mui/material"
+import { CircularProgress, Typography, Container, Box, Paper, Button, Fade } from "@mui/material"
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import Link from "next/link"
 
 const ResultPage = () => {
     const router = useRouter()
@@ -37,35 +40,74 @@ const ResultPage = () => {
 
     if (loading) {
         return (
-            <Container maxWidth="sm" sx={{ textAlign: "center", mt: 4 }}>
-                <CircularProgress />
-                <Typography variant="h6">Loading...</Typography>
+            <Container maxWidth="sm" sx={{ 
+                height: '100vh', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'center', 
+                alignItems: 'center' 
+            }}>
+                <CircularProgress size={60} thickness={4} />
+                <Typography variant="h6" sx={{ mt: 2 }}>Processing your payment...</Typography>
             </Container>
         )
     }
 
-    if (error || !session) {
-        return (
-            <Container maxWidth="sm" sx={{ textAlign: "center", mt: 4 }}>
-                <Typography variant="h4">Payment Failed</Typography>
-                <Box sx={{ mt: 2 }}>
-                    <Typography variant="body1">
-                        Your payment was not successful. Please try again.
+    const Content = () => {
+        if (error || !session) {
+            return (
+                <>
+                    <ErrorOutlineIcon sx={{ fontSize: 80, color: 'error.main', mb: 2 }} />
+                    <Typography variant="h4" gutterBottom>Payment Failed</Typography>
+                    <Typography variant="body1" paragraph>
+                        We're sorry, but your payment was not successful. Please try again or contact support if the problem persists.
                     </Typography>
-                </Box>
-            </Container>
+                    <Button variant="contained" color="primary" component={Link} href="/">
+                        Return to Home
+                    </Button>
+                </>
+            )
+        }
+
+        return (
+            <>
+                <CheckCircleOutlineIcon sx={{ fontSize: 80, color: 'success.main', mb: 2 }} />
+                <Typography variant="h4" gutterBottom>Thank You for Your Purchase!</Typography>
+                <Typography variant="body1" paragraph>
+                    Your payment was successful. You will receive an email with the order details shortly.
+                </Typography>
+                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                    Session ID: {session_id}
+                </Typography>
+                <Button variant="contained" color="primary" component={Link} href="/" sx={{ mt: 2 }}>
+                    Go Back Home
+                </Button>
+            </>
         )
     }
 
     return (
-        <Container maxWidth="sm" sx={{ textAlign: "center", mt: 4 }}>
-            <Typography variant="h4">Thank you for your purchase!</Typography>
-            <Box sx={{ mt: 2 }}>
-                <Typography variant="h6">Session ID: {session_id}</Typography>
-                <Typography variant="body1">
-                    We have received your payment. You will receive an email with the order details shortly.
-                </Typography>
-            </Box>
+        <Container maxWidth="sm" sx={{ 
+            minHeight: '100vh', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            py: 4
+        }}>
+            <Fade in={!loading}>
+                <Paper elevation={3} sx={{ 
+                    p: 4, 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    maxWidth: 400,
+                    width: '100%'
+                }}>
+                    <Content />
+                </Paper>
+            </Fade>
         </Container> 
     )
 }
